@@ -40,7 +40,7 @@ void help(){
 	cout<<"Four of a King:    Four cards with a matching rank. Suits may differ.\n";
 	cout<<"Full House:    Three cards with a matching rank, and two cards with any other matching rank, with cards from two or more suits.\n";
 	cout<<"Flush:    Five cards of any rank, all from a single suit.\n";
-	cout<<"Straight:    Five cards in consecutive order which are not all from the same suit. Aces can be counted high or low, but not both at once.\n";
+	cout<<"Straight:    Five cards in consecutive order which are not all from the same suit.\n";
 	cout<<"Three of a King:    Three cards with a matching rank. Suits may differ.\n";
 	cout<<"Two Pair:    Two cards with a matching rank, and two cards with any other matching rank. Suits may differ.\n";
 	cout<<"Pair:    Two cards with a matching rank. Suits may differ.\n";
@@ -1402,7 +1402,8 @@ struct challenge{
 		cout<<"Now you can Play (2),(4),(5),(7),(8) cause these cards are from the same suit,so you played a \"Flush\".";
 		cout<<"Then you get (Chip = 35 + 2 + 6 + 10 + 10 + 11 = 74) * (Mult = 4) = 296 Points\n";
 		
-		cout<<"The Poker Hands give the basis(35 and 4), and every card that make up this Poker Hands give additions, while Joker Cards and Consumable Cards give more.\n";
+		cout<<"The Poker Hands give the basis(35 and 4), and every card that make up this Poker Hands give additions(2~10 cards add chip by their rank. J,Q and K add chip by 10. And A add chip by 11.), while Joker Cards and Consumable Cards give more.\n";
+		
 		cout<<"Initially, You have 4 chances for Playing Cards and 4 chances for Discards.\n";
 		cout<<"Your goal is to maximize the Points and buy the Cards and Packs in the Shop to improve your run.\n";
 		
