@@ -296,33 +296,33 @@ void planetInit(){
 }
 
 void tarotInit(){
-	tarots[1]=(consumables){"tarot","The Magician(1)","Enhances 2 selected cards to Lucky Cards (3 coins)",3};
+	tarots[1]=(consumables){"tarot","The Magician[I]","Enhances 2 selected cards to Lucky Cards (3 coins)",3};
 
-	tarots[2]=(consumables){"tarot","The Empress(3)","Enhances 2 selected cards to Mult Cards (3 coins)",3};
+	tarots[2]=(consumables){"tarot","The Empress[III]","Enhances 2 selected cards to Mult Cards (3 coins)",3};
 
-	tarots[3]=(consumables){"tarot","The Hierophant(5)","Enhances 2 selected cards to Bonus Cards (3 coins)",3};
+	tarots[3]=(consumables){"tarot","The Hierophant[V]","Enhances 2 selected cards to Bonus Cards (3 coins)",3};
 
-	tarots[4]=(consumables){"tarot","The Lovers(6)","Enhances 1 selected card into a Wild Card (3 coins)",3};
+	tarots[4]=(consumables){"tarot","The Lovers[VI]","Enhances 1 selected card into a Wild Card (3 coins)",3};
 
-	tarots[5]=(consumables){"tarot","The Chariot(7)","Enhances 1 selected card into a Steel Card (3 coins)",3};
+	tarots[5]=(consumables){"tarot","The Chariot[VII]","Enhances 1 selected card into a Steel Card (3 coins)",3};
 
-	tarots[6]=(consumables){"tarot","Justice(8)","Enhances 1 selected card into a Glass Card (3 coins)",3};
+	tarots[6]=(consumables){"tarot","Justice[VIII]","Enhances 1 selected card into a Glass Card (3 coins)",3};
 
-	tarots[7]=(consumables){"tarot","The Hermit(9)","Doubles money(Max of $20) (3 coins)",3};
+	tarots[7]=(consumables){"tarot","The Hermit[IX]","Doubles money(Max of $20) (3 coins)",3};
 
-	tarots[8]=(consumables){"tarot","The Wheel of Fortune(10)","1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker (3 coins)",3};
+	tarots[8]=(consumables){"tarot","The Wheel of Fortune[X]","1 in 4 chance to add Foil, Holographic, or Polychrome edition to a random Joker (3 coins)",3};
 
-	tarots[9]=(consumables){"tarot","The Devil(15)","Enhances 1 selected card into a Gold Card (3 coins)",3};
+	tarots[9]=(consumables){"tarot","The Devil[XV]","Enhances 1 selected card into a Gold Card (3 coins)",3};
 
-	tarots[10]=(consumables){"tarot","The Tower(16)","Enhances 1 selected card into a Stone Card (3 coins)",3};
+	tarots[10]=(consumables){"tarot","The Tower[XVI]","Enhances 1 selected card into a Stone Card (3 coins)",3};
 
-	tarots[11]=(consumables){"tarot","The Star(17)","Converts up to 3 selected cards to Diamonds (3 coins)",3};
+	tarots[11]=(consumables){"tarot","The Star[XVII]","Converts up to 3 selected cards to Diamonds (3 coins)",3};
 
-	tarots[12]=(consumables){"tarot","The Moon(18)","Converts up to 3 selected cards to Clubs (3 coins)",3};
+	tarots[12]=(consumables){"tarot","The Moon[XVIII]","Converts up to 3 selected cards to Clubs (3 coins)",3};
 
-	tarots[13]=(consumables){"tarot","The Sun(19)","Converts up to 3 selected cards to Hearts (3 coins)",3};
+	tarots[13]=(consumables){"tarot","The Sun[XIX]","Converts up to 3 selected cards to Hearts (3 coins)",3};
 
-	tarots[14]=(consumables){"tarot","The World(21)","Converts up to 3 selected cards to Spades (3 coins)",3};
+	tarots[14]=(consumables){"tarot","The World[XXI]","Converts up to 3 selected cards to Spades (3 coins)",3};
 }
 
 void spectralInit(){
@@ -417,25 +417,25 @@ void SelecttoSuit(int num,int suit){
 }
 void useTarot(const consumables &tmp){
 	
-	if(tmp.name=="The Magician[1]") SelecttoEnhance(2,"Lucky");
-	if(tmp.name=="The Empress[3]") SelecttoEnhance(2,"Mult");
-	if(tmp.name=="The Hierophant[5]") SelecttoEnhance(2,"Bonus");
-	if(tmp.name=="The Lovers[6]") SelecttoEnhance(1,"Wild");
-	if(tmp.name=="The Chariot[7]") SelecttoEnhance(1,"Steel");
-	if(tmp.name=="Justice[8]") SelecttoEnhance(1,"Glass");
-	if(tmp.name=="The Devil[15]") SelecttoEnhance(1,"Gold");
-	if(tmp.name=="The Tower[16]") SelecttoEnhance(1,"Stone");
+	if(tmp.name=="The Magician[I]") SelecttoEnhance(2,"Lucky");
+	if(tmp.name=="The Empress[III]") SelecttoEnhance(2,"Mult");
+	if(tmp.name=="The Hierophant[V]") SelecttoEnhance(2,"Bonus");
+	if(tmp.name=="The Lovers[VI]") SelecttoEnhance(1,"Wild");
+	if(tmp.name=="The Chariot[VII]") SelecttoEnhance(1,"Steel");
+	if(tmp.name=="Justice[VIII]") SelecttoEnhance(1,"Glass");
+	if(tmp.name=="The Devil[XV]") SelecttoEnhance(1,"Gold");
+	if(tmp.name=="The Tower[XVI]") SelecttoEnhance(1,"Stone");
 	
-	if(tmp.name=="The Hermit[9]") p1.money+=min(p1.money,20);
-	if(tmp.name=="The Wheel of Fortune[10]"&&rand()%4==0&&p1.jcnt){
+	if(tmp.name=="The Hermit[IX]") p1.money+=min(p1.money,20);
+	if(tmp.name=="The Wheel of Fortune[X]"&&rand()%4==0&&p1.jcnt){
 		int t=rand()%3;
 		p1.j[rand()%p1.jcnt+1].edition=(t==0?"Polychrome":t==1?"Holographic":"Foil");
 	}
 	
-	if(tmp.name=="The Star[17]") SelecttoSuit(3,1);
-	if(tmp.name=="The Moon[18]") SelecttoSuit(3,2);
-	if(tmp.name=="The Sun[19]") SelecttoSuit(3,3);
-	if(tmp.name=="The World[21]") SelecttoSuit(3,4);
+	if(tmp.name=="The Star[XVII]") SelecttoSuit(3,1);
+	if(tmp.name=="The Moon[XVIII]") SelecttoSuit(3,2);
+	if(tmp.name=="The Sun[XIX]") SelecttoSuit(3,3);
+	if(tmp.name=="The World[XXI]") SelecttoSuit(3,4);
 
 }
 void SelecttoSeal(int num,string type){
@@ -485,7 +485,7 @@ void useConsumables(const consumables &tmp){
 	//在 hand 中选取，在 p1 中加减，不对 deck 修改 
 	if(tmp.type=="planet") usePlanet(tmp);
 	else if(tmp.type=="tarot") useTarot(tmp);
-	else if(tmp.type=="spectral") useSpectral(tmp);	
+	else if(tmp.type=="spectral") useSpectral(tmp);
 	p1.remConsumable(tmp);	
 }
 struct SHOP{
@@ -746,8 +746,8 @@ struct SHOP{
 			else if(tmp.name=="Arcana Pack"){openArcanaPack(tmp);}
 			else if(tmp.name=="Spectral Pack"){openSpectralPack(tmp);}
 			
-			if(num==1) c1buy=1;
-			if(num==2) c2buy=1;
+			if(num==1) p1buy=1;
+			if(num==2) p2buy=1;
 			Show();
 			WaitForOperation();
 		}
@@ -831,6 +831,7 @@ struct challenge{
 		for(int i=1;i<=deck.cnt;i++)
 			deck.c[i]=p1.c[i];
 		deck.shufle();
+		deck.rewind();
 		hand.cnt=0;			
 		cout<<"This round target is "<<target<<'\n';
 	}
@@ -935,7 +936,7 @@ struct challenge{
 	}
 	
 	void playDiscard(){
-		discards--;
+		
 		
 		int q[15],qn=0;	
 		cout<<"input the amount of the cards you need to Discard\n";
@@ -949,6 +950,21 @@ struct challenge{
 		
 		sort(q+1,q+1+qn);
 		
+		for(int i=2;i<=qn;i++){
+			if(q[i]==q[i-1]){
+				cout<<"Invalid input!\n";
+				return ;
+			}
+		}
+		for(int i=1;i<=qn;i++){
+			if(q[i]<1||q[i]>hand.cnt){
+				cout<<"Invalid input!\n";
+				return ;
+			}
+		}
+		
+		
+		
 		for(int i=qn;i>=1;i--){
 			if(hand.c[q[i]].seal=="Purple") getRandomTarot();	
 			
@@ -956,16 +972,16 @@ struct challenge{
 				hand.c[j-1]=hand.c[j];
 			hand.cnt--;
 		}
-				
+		discards--;		
 	}
 	void waitForOperation(){
 		Replenish();
-		cout<<"you have "<<discards<<"times Discards\n";
+		cout<<"you have "<<discards<<" times Discards\n";
 		cout<<"input 1 for Play Hand, 2 for Discard, 3 for Spectral/Planet/Tarot\n";
 		
 		cin>>opt;
 	}
-	void playCard(){
+	bool playCard(){
 		int q[15],qn=0;	
 		cout<<"input the amount of the cards you need to Play Hand\n";
 		
@@ -977,6 +993,19 @@ struct challenge{
 			cin>>q[i]; 
 		
 		sort(q+1,q+1+qn);
+		
+		for(int i=2;i<=qn;i++){
+			if(q[i]==q[i-1]){
+				cout<<"Invalid input!\n";
+				return false;
+			}
+		}
+		for(int i=1;i<=qn;i++){
+			if(q[i]<1||q[i]>hand.cnt){
+				cout<<"Invalid input!\n";
+				return false;
+			}
+		}
 		
 		calc.cnt=0;
 		
@@ -991,7 +1020,8 @@ struct challenge{
 		
 		int ans=calculate();
 		sum+=ans;
-		cout<<"You get "<<chips<<" * "<<mults<<" = "<<ans<<" points\nAdd up to "<<sum<<" points\n";		
+		cout<<"You get "<<chips<<" * "<<mults<<" = "<<ans<<" points\nAdd up to "<<sum<<" points\n";
+		return true;	
 	}
 	bool settle(){
 		if(sum>=target){
@@ -1022,7 +1052,7 @@ struct challenge{
 			reset();
 			
 			for(hands=4;hands;hands--){
-				cout<<"now you have "<<hands<<"times Play Hands\n";
+				cout<<"now you have "<<hands<<" times Play Hands\n";
 				waitForOperation();
 				
 				
@@ -1057,7 +1087,9 @@ struct challenge{
 						waitForOperation();
 					}	
 				}
-				playCard();
+				
+				bool ttmp=playCard();
+				while(!ttmp) ttmp=playCard();
 				
 				if(sum>=target) break;
 			}			
