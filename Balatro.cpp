@@ -2,6 +2,42 @@
 using namespace std;
 
 
+void help(){
+	
+	cout<<"----------------------------HELP---------------------------------\n";
+	cout<<"JOKER\n";
+	cout<<"EDITIONS\n";
+	cout<<"Base :    No extra effects\n";
+	cout<<"Foil :    +50 Chip\n";
+	cout<<"Holographic :    +10 Mult\n";
+	cout<<"Polychrome :    *1.5 Mult\n";
+	cout<<"Negative :    +1 Joker slot\n";
+	
+	cout<<"\n";
+	
+	cout<<"PLAYING CARDS\n";
+	cout<<"ENHANCEMENTS\n";
+	cout<<"Bonus Card:    +30 Chip\n";
+	cout<<"Mult Card:    +4 Mult\n";
+	cout<<"Wild Card:    Is considered to be every suit simultaneously\n";
+	cout<<"Glass Card:    *2 Mult  ,  1 in 4 chance to destroy card after all scoring is finished\n";
+	cout<<"Steel Card:    x1.5 Mult while this card stays in hand\n";
+	cout<<"Stone Card:    +50 Chips  ,  No rank or suit  ,  Card always scores\n";
+	cout<<"Gold Card:    $3 if this card is held in hand at end of round\n";
+	cout<<"Lucky Card:    1 in 5 chance for +20 Mult  ,  1 in 15 chance to win $20(Both can trigger on the same turn)\n";
+	
+	cout<<"\n";
+	
+	cout<<"SEALS\n";
+	cout<<"Gold Seal:    Earn $3 when this card is played and scores\n";
+	cout<<"Red Seal:    Retrigger this card 1 time. As well as when being scored in a poker hand, this also includes in-hand effects\n";
+	cout<<"Blue Seal:    If this card is held at end of round, it creates the Planet card matching the final poker hand played, if you have room\n";
+	cout<<"Purple Seal:    Creates a Tarot card when discarded, if you have room\n";
+	
+	cout<<"-----------------------------------------------------------------\n";
+	cout<<"\n";
+}
+
 struct joker{
 	int purchasePrice;
 	int salePrice;
@@ -10,7 +46,7 @@ struct joker{
 	string description;
 	string rarity;
 	friend bool operator==(const joker &x,const joker &y){
-		return x.type==y.type&&x.edition==y.edition;
+		return x.type==y.type;
 	}
 	
 	void resetEdition(){
@@ -91,7 +127,10 @@ struct card{
 		if((t-1)/3+1<=4) seal=sealName[(t-1)/3+1];
 		else seal="";
 	}
-
+	
+	void show(){
+		cout<<numberToString[getNumber()]<<' '<<suitToString[getSuit()]<<' '<<(enhance==""?"":(enhance+"(enhance)"))<<' '<<(seal==""?"":(seal+"(seal)"))<<'\n';
+	}
 };
 struct Deck{
 	card c[105];
@@ -103,7 +142,8 @@ struct Deck{
 	}
 	void show(){
 		for(int i=1;i<=cnt;i++){
-			cout<<"("<<i<<")  "<<numberToString[c[i].getNumber()]<<' '<<suitToString[c[i].getSuit()]<<' '<<(c[i].enhance==""?"":(c[i].enhance+"(enhance)"))<<' '<<(c[i].seal==""?"":(c[i].seal+"(seal)"))<<'\n';
+			cout<<"("<<i<<")  ";
+			c[i].show();
 		}
 	}
 	void sort(){
@@ -199,6 +239,8 @@ struct player{
 	int ccnt;
 	void addCard(card t){
 		c[++ccnt]=t;
+		cout<<"Successfully added card ";
+		t.show();
 	}
 	void remCard(card t){
 		for(int i=1;i<=ccnt;i++)
@@ -213,13 +255,18 @@ struct player{
 		for(int i=1;i<=ccnt;i++)
 			if(c[i]==t){
 				c[i].enhance=type;
+				cout<<"Successfully enhanced card ";
+				c[i].show();				
 				break;
 			}
+
 	}
 	void seal(const card &t,string type){
 		for(int i=1;i<=ccnt;i++)
 			if(c[i]==t){
 				c[i].seal=type;
+				cout<<"Successfully sealed card ";
+				c[i].show();
 				break;
 			}
 	}
@@ -234,11 +281,25 @@ struct player{
 	joker j[105];
 	int jcnt=0,JcntMax=5;
 	void addJoker(joker tmp){
-		if(tmp.edition=="Negative") ++JcntMax;
+		if(tmp.edition=="Negative"){
+			++JcntMax;
+			cout<<"Negative Edition! +1 Joker Slot\n";
+		}
 		if(jcnt<JcntMax){
+			
 			j[++jcnt]=tmp;
-			if(tmp.type=="Juggler") Juggler++;
-			if(tmp.type=="Shortcut") Shortcut++;
+			cout<<"Successfully added Joker card ";
+			tmp.show();
+			if(tmp.type=="Juggler"){
+				Juggler++;
+				cout<<"Juggler! +1 hand size\n";
+			}
+			if(tmp.type=="Shortcut"){
+				Shortcut++;
+				cout<<"Shortcut! Allows Straights to be made with gaps of 1 rank\n";
+			}
+		}else{
+			cout<<"Sorry,but there is no room for this Joker\n";
 		}
 	}
 	void remJoker(joker tmp){
@@ -258,8 +319,14 @@ struct player{
 	int cocnt,cocntMax=2;
 	
 	void addConsumable(consumables tmp){
-		if(cocnt<cocntMax)
+		if(cocnt<cocntMax){
 			co[++cocnt]=tmp;
+			cout<<"Successfully added consumable card ";
+			tmp.show();
+		}else{
+			cout<<"Sorry,but there is no room for this comsumable card\n";
+		}
+			
 	}
 	void remConsumable(consumables tmp){
 		for(int i=1;i<=cocnt;i++)
@@ -383,6 +450,7 @@ void PHupgrade(int tmp){
 }
 void usePlanet(const consumables &tmp){	
 	PHupgrade(PlanettoInt[tmp]);
+	cout<<"Planet Card Successfully used!\n";
 }
 void consumablesReplenish(){
 	deck.cnt=p1.ccnt;
@@ -399,7 +467,7 @@ void consumablesReplenish(){
 }
 void SelecttoEnhance(int num,string type){
 	consumablesReplenish();
-	cout<<"now input the rank of "<<num<<" cards to be enhanced\n";
+	cout<<"now INPUT the rank of "<<num<<" cards to be enhanced\n";
 	for(int i=1;i<=num;i++){
 		int x; cin>>x;
 		p1.enhance(hand.c[x],type);
@@ -408,7 +476,7 @@ void SelecttoEnhance(int num,string type){
 }
 void SelecttoSuit(int num,int suit){
 	consumablesReplenish();
-	cout<<"now input the rank of "<<num<<" cards to be converted\n";
+	cout<<"now INPUT the rank of "<<num<<" cards to be converted\n";
 	for(int i=1;i<=num;i++){
 		int x; cin>>x;
 		p1.resetSuit(hand.c[x],suit);
@@ -427,20 +495,28 @@ void useTarot(const consumables &tmp){
 	if(tmp.name=="The Tower[XVI]") SelecttoEnhance(1,"Stone");
 	
 	if(tmp.name=="The Hermit[IX]") p1.money+=min(p1.money,20);
-	if(tmp.name=="The Wheel of Fortune[X]"&&rand()%4==0&&p1.jcnt){
-		int t=rand()%3;
-		p1.j[rand()%p1.jcnt+1].edition=(t==0?"Polychrome":t==1?"Holographic":"Foil");
+	if(tmp.name=="The Wheel of Fortune[X]"){
+		if(rand()%4==0&&p1.jcnt){
+			int t=rand()%3;
+			p1.j[rand()%p1.jcnt+1].edition=(t==0?"Polychrome":t==1?"Holographic":"Foil");
+		}else{
+			cout<<"Sorry,Tarot Card Failed used :(\n";
+			return ; 
+		}	
 	}
+
 	
 	if(tmp.name=="The Star[XVII]") SelecttoSuit(3,1);
 	if(tmp.name=="The Moon[XVIII]") SelecttoSuit(3,2);
 	if(tmp.name=="The Sun[XIX]") SelecttoSuit(3,3);
 	if(tmp.name=="The World[XXI]") SelecttoSuit(3,4);
+	
+	cout<<"Tarot Card Successfully used!\n";
 
 }
 void SelecttoSeal(int num,string type){
 	consumablesReplenish();
-	cout<<"now input the rank of "<<num<<" cards to be sealed\n";
+	cout<<"now INPUT the rank of "<<num<<" cards to be sealed\n";
 	for(int i=1;i<=num;i++){
 		int x; cin>>x;
 		card tmp=hand.c[x];
@@ -479,6 +555,8 @@ void useSpectral(const consumables &tmp){
 	if(tmp.name=="Meidum") SelecttoSeal(1,"Purple");
 	
 	if(tmp.name=="Black Hole") for(int i=1;i<=12;i++) PHupgrade(i);
+	
+	cout<<"Spectral Card Successfully used!\n";
 }
 
 void useConsumables(const consumables &tmp){
@@ -615,7 +693,7 @@ struct SHOP{
 			for(int i=1;i<=p1.jcnt;i++)
 				if(c2.type==1&&c2.j==p1.j[i]) tmp=0;
 			if(c2.type==1&&c1.type==1&&c2.j==c1.j) tmp=0;
-		}		
+		}
 			
 	}
 	
@@ -623,7 +701,7 @@ struct SHOP{
 	void WaitForOperation(){
 		
 		cout<<"You have "<<p1.money<<" coins now.\n";
-		cout<<"input 1 for Buy, 2 for Reroll the Cards(5 coins), 3 for Spectral/Planet/Tarot, 4 for next Round\n";
+		cout<<"INPUT 1 for Buy, 2 for Reroll the Cards(5 coins), 3 for Spectral/Planet/Tarot,\n4 for Check Jokers/Consumable Cards, 5 for Check Poker Hands Levels, 6 for help, 7 for next Round\n";
 		
 		cin>>opt;
 	}
@@ -669,7 +747,7 @@ struct SHOP{
 		}
 		hand.sort();
 		hand.show();
-		cout<<"input "<<tmp.result<<" ranks of the cards you want\n";
+		cout<<"INPUT "<<tmp.result<<" ranks of the cards you want\n";
 		for(int i=1;i<=tmp.result;i++){
 			int x; cin>>x;
 			p1.addCard(hand.c[x]);
@@ -678,25 +756,35 @@ struct SHOP{
 	
 	void openBuffoonPack(pack tmp){
 		joker tmpjokers[5];
-		for(int i=1;i<=tmp.total;i++){
-			tmpjokers[i]=jokers[rand()%10+1];
+		for(int i=1;i<=10-p1.JcntMax;i++){
+			bool ttmp=0;
+			while(!ttmp){
+				ttmp=1;
+				tmpjokers[i]=jokers[rand()%10+1];
+				for(int l=1;l<=p1.jcnt;l++)
+					if(tmpjokers[i]==p1.j[l]) ttmp=0;
+			}		
 			tmpjokers[i].resetEdition();
+			cout<<"("<<i<<")  ";
 			tmpjokers[i].show();
 		}
-		cout<<"input "<<tmp.result<<" ranks of the jokers you want\n";
+		if(p1.JcntMax+tmp.total>10) cout<<"Sorry there are no more Jokers\n";
+		
+		cout<<"INPUT "<<tmp.result<<" ranks of the jokers you want\n";
 		for(int i=1;i<=tmp.result;i++){
 			int x; cin>>x;
 			p1.addJoker(tmpjokers[x]);
-		}	
+		}
 	}
 	
 	void openCelestialPack(pack tmp){
 		consumables tmpco[5];
 		for(int i=1;i<=tmp.total;i++){
 			tmpco[i]=planets[rand()%12+1];
+			cout<<"("<<i<<")  ";
 			tmpco[i].show();
 		}
-		cout<<"input "<<tmp.result<<" ranks of the planet cards you want to use\n";
+		cout<<"INPUT "<<tmp.result<<" ranks of the planet cards you want to use\n";
 		for(int i=1;i<=tmp.result;i++){
 			int x; cin>>x;
 			usePlanet(tmpco[x]);
@@ -707,9 +795,10 @@ struct SHOP{
 		consumables tmpco[5];
 		for(int i=1;i<=tmp.total;i++){
 			tmpco[i]=tarots[rand()%14+1];
+			cout<<"("<<i<<")  ";
 			tmpco[i].show();
 		}
-		cout<<"input "<<tmp.result<<" ranks of the tarot cards you want to use\n";
+		cout<<"INPUT "<<tmp.result<<" ranks of the tarot cards you want to use\n";
 		for(int i=1;i<=tmp.result;i++){
 			int x; cin>>x;
 			useTarot(tmpco[x]);
@@ -722,9 +811,10 @@ struct SHOP{
 			if(rand()%1000<3)
 				tmpco[i]=spectrals[8];
 			else tmpco[i]=spectrals[rand()%7+1];
+			cout<<"("<<i<<")  ";
 			tmpco[i].show();
 		}
-		cout<<"input "<<tmp.result<<" ranks of the spectral cards you want to use\n";
+		cout<<"INPUT "<<tmp.result<<" ranks of the spectral cards you want to use\n";
 		for(int i=1;i<=tmp.result;i++){
 			int x; cin>>x;
 			useSpectral(tmpco[x]);
@@ -766,10 +856,10 @@ struct SHOP{
 		
 		WaitForOperation();
 		
-		while(opt!=4){
+		while(opt!=7){
 
 			if(opt==1){
-				cout<<"input only ONE rank of which you want to buy\n";
+				cout<<"INPUT only ONE rank of which you want to buy\n";
 				int x; cin>>x;
 				if((x==1&&c1buy)||(x==2&&c2buy)||(x==3&&p1buy)||(x==4&&p2buy)){
 					cout<<"it had been sold out\n";
@@ -780,7 +870,7 @@ struct SHOP{
 				else if(x==3){buyPack(pack1,1);}
 				else if(x==4){buyPack(pack2,2);}
 				else{
-					cout<<"?\ninput again\n";
+					cout<<"?\nINPUT again\n";
 					WaitForOperation();
 				}
 			}else if(opt==2){
@@ -797,18 +887,37 @@ struct SHOP{
 			}else if(opt==3){
 				if(p1.cocnt){
 					p1.showConsumable();		
-					cout<<"input the rank of the consumable card you want to use or 0 to go back\n";				
+					cout<<"INPUT the rank of the consumable card you want to use or 0 to go back\n";				
 					int x; cin>>x;
 					if(x==0) WaitForOperation();
 					else{
 						useConsumables(p1.co[x]);
-						cout<<"Successfully used!\n";
 						WaitForOperation();	
 					}
 				}else{
 					cout<<"You have no consumable card\n";
 					WaitForOperation();	
 				}				
+			}else if(opt==4){
+				cout<<"your Jokers and Consumable Cards are as follow\n";
+				for(int i=1;i<=p1.jcnt;i++)
+					p1.j[i].show();
+				for(int i=1;i<=p1.cocnt;i++)
+					p1.co[i].show();
+				WaitForOperation();
+			}else if(opt==5){
+				cout<<"your Poker Hands Levels are as follow\n";
+				for(int i=4;i<=12;i++)
+					cout<<PHname[i]<<"          (level="<<PHlevel[i]<<") chip="<<PHchip[i]<<" mult="<<PHmult[i]<<'\n';
+				WaitForOperation();	
+			}else if(opt==6){
+				help();
+				WaitForOperation();	
+			}else if(opt==7){
+				
+			}else{
+				cout<<"?\nINPUT again\n";
+				WaitForOperation();
 			}
 		}
 	}
@@ -820,7 +929,7 @@ struct SHOP{
 
 struct challenge{
 	int T=0;
-	int targets[16]={0,150,225,300,300,450,600,450,675,900,600,900,1200,1200,1800,2400};
+	int targets[16]={0,300,450,600,450,675,900,600,900,1200,1200,1800,2400,1800,2700,5000};
 	int target,sum,BasicMoney,hands,discards,opt;
 	
 	void reset(){
@@ -839,33 +948,83 @@ struct challenge{
 	int PokerHands,numcnt[15];
 	
 	double chips,mults;
+	
+	void showChipandMult(){
+		cout<<"Chip = "<<chips<<" *  Mult = "<<mults<<'\n';
+	}
+	void showMoney(){
+		cout<<"You have "<<p1.money<<" coins now\n";
+	}
 	void reTrigger(card tmp){
+		
+		tmp.show();
 		chips+=tmp.getNumber()==1?11:tmp.getNumber()>10?10:tmp.getNumber();
-		if(tmp.seal=="Gold") p1.money+=3;
-		if(tmp.enhance=="Bonus") chips+=30;
-		if(tmp.enhance=="Mult") mults+=4;
+		cout<<"+"<<(tmp.getNumber()==1?11:tmp.getNumber()>10?10:tmp.getNumber())<<" Chip\n";
+		showChipandMult();
+		
+		if(tmp.seal=="Gold"){
+			p1.money+=3;
+			cout<<"Gold Seal! +3 coins\n";
+			showMoney();
+		}
+		if(tmp.enhance=="Bonus"){
+			chips+=30;
+			cout<<"Bonus Card! +30 Chip\n";
+			showChipandMult();
+		}
+		if(tmp.enhance=="Mult"){
+			mults+=4;
+			cout<<"Mult Card! +4 Mult\n";
+			showChipandMult();
+		}
 		if(tmp.enhance=="Glass"){
 			mults*=2;
-			if(rand()%4==0) p1.remCard(tmp);
+			cout<<"Glass Card! *2 Mult\n";
+			showChipandMult();
+			if(rand()%4==0){
+				p1.remCard(tmp);
+				cout<<"Glass Card:( this card has been destroyed\n";
+			}
 		}
 		if(tmp.enhance=="Lucky"){
-			if(rand()%5==0) mults+=20;
-			if(rand()%15==0) p1.money+=20;
+			if(rand()%5==0){
+				mults+=20;
+				cout<<"Lucky Card! +20 Mult\n";
+				showChipandMult(); 
+			}
+			if(rand()%15==0){
+				p1.money+=20;
+				cout<<"Lucky Card! +20 coins\n";
+				showMoney();
+			}
 		}
 		
 		for(int i=1;i<=p1.jcnt;i++){
-			if(p1.j[i].type=="8 Ball"&&tmp.getNumber()==8&&rand()%4==0)
+			if(p1.j[i].type=="8 Ball"&&tmp.getNumber()==8&&rand()%4==0){
+				cout<<"8 Ball! get random tarot\n";
 				getRandomTarot();
-			if(p1.j[i].type=="Fibonacci"&&(tmp.getNumber()==1||tmp.getNumber()==2||tmp.getNumber()==3||tmp.getNumber()==5||tmp.getNumber()==8))
+			}
+				
+			if(p1.j[i].type=="Fibonacci"&&(tmp.getNumber()==1||tmp.getNumber()==2||tmp.getNumber()==3||tmp.getNumber()==5||tmp.getNumber()==8)){
 				mults+=8;
+				cout<<"Fibonacci! +8 Mult\n";
+				showChipandMult();
+			}
+				
 		}
 	}
 	void trigger(card tmp){
 		reTrigger(tmp);
-		if(tmp.seal=="Red") reTrigger(tmp);
+		if(tmp.seal=="Red"){
+			cout<<"Red Seal! Retrigger this card\n";
+			reTrigger(tmp);
+		}
 		for(int i=1;i<=p1.jcnt;i++)
-			if(p1.j[i].type=="Hack"&&(tmp.getNumber()==2||tmp.getNumber()==3||tmp.getNumber()==4||tmp.getNumber()==5))
+			if(p1.j[i].type=="Hack"&&(tmp.getNumber()==2||tmp.getNumber()==3||tmp.getNumber()==4||tmp.getNumber()==5)){
+				cout<<"Hack! Retrigger this card\n";
 				reTrigger(tmp);
+				break;
+			}		
 	}
 	
 	int calculate(){
@@ -874,6 +1033,7 @@ struct challenge{
 		cout<<"It`s "<<PHname[PokerHands]<<"!\n";
 		
 		chips=PHchip[PokerHands],mults=PHmult[PokerHands];
+		showChipandMult();
 		
 		for(int i=1;i<=calc.cnt;i++)
 			numcnt[calc.c[i].getNumber()]++;
@@ -884,12 +1044,22 @@ struct challenge{
 			for(int i=1;i<=calc.cnt;i++){
 				if(numcnt[calc.c[i].getNumber()]>1){
 					trigger(calc.c[i]);
-				}else if(calc.c[i].enhance=="Stone") chips+=50;
+				}else if(calc.c[i].enhance=="Stone"){
+					calc.c[i].show();
+					chips+=50;	
+					cout<<"Stone Card! +50 Chip\n";
+					showChipandMult();
+				}
 			}
 		}else if(PokerHands==12){
 			trigger(calc.c[calc.cnt]);
 			for(int i=1;i<calc.cnt;i++)
-				if(calc.c[i].enhance=="Stone") chips+=50;
+				if(calc.c[i].enhance=="Stone"){
+					calc.c[i].show();
+					chips+=50;
+					cout<<"Stone Card! +50 Chip\n";
+					showChipandMult();
+				} 
 		}else{
 			for(int i=1;i<=calc.cnt;i++)
 				trigger(calc.c[i]);
@@ -900,29 +1070,66 @@ struct challenge{
 			
 			
 		for(int i=1;i<=hand.cnt;i++){
-			if(hand.c[i].enhance=="Steel") mults*=1.5;
-			if(hand.c[i].enhance=="Gold") p1.money+=3;
+			if(hand.c[i].enhance=="Steel"){
+				hand.c[i].show();
+				mults*=1.5;
+				cout<<"Steel Card! *1.5 Mult\n";
+				showChipandMult();
+			}
 		}
 		
 		for(int i=1;i<=p1.jcnt;i++){
-			if(p1.j[i].type=="Joker") mults+=4;
-			if(p1.j[i].type=="Half Joker"&&calc.cnt<=3) mults+=20;
+			if(p1.j[i].type=="Joker"){
+				mults+=4;
+				cout<<"Joker! +4 Mult\n";
+				showChipandMult();
+			}
+			if(p1.j[i].type=="Half Joker"&&calc.cnt<=3){
+				mults+=20;
+				cout<<"Half Joker! +20 Mult\n";
+				showChipandMult();
+			} 
 			if(p1.j[i].type=="Mime"){
-				for(int i=1;i<=hand.cnt;i++){
-					if(hand.c[i].enhance=="Steel") mults*=1.5;
-					if(hand.c[i].enhance=="Gold") p1.money+=3;
+				cout<<"Mime! retrigger cards in hand\n";
+				for(int l=1;l<=hand.cnt;l++){
+					if(hand.c[l].enhance=="Steel"){
+						hand.c[l].show();
+						mults*=1.5;
+						cout<<"Steel Card! *1.5 Mult\n";
+						showChipandMult();
+					}
 				}
 			}
-			if(p1.j[i].type=="Banner") chips+=30*discards;
-			if(p1.j[i].type=="Bull") chips+=p1.money*2;
+			if(p1.j[i].type=="Banner"){
+				chips+=30*discards;
+				cout<<"Banner! +30*discard="<<30*discards<<" Chip\n";
+				showChipandMult();
+			}
+			if(p1.j[i].type=="Bull"){
+				chips+=p1.money*2;
+				cout<<"Bull! +2*coins="<<p1.money*2<<" Chip\n";
+				showChipandMult();
+			}
 			
-			if(p1.j[i].edition=="Foil") chips+=50;
-			if(p1.j[i].edition=="Holographic") mults+=10;
-			if(p1.j[i].edition=="Polychrome") mults*=1.5;
+			if(p1.j[i].edition=="Foil"){
+				chips+=50;
+				cout<<"Foil Edition! +50 Chip\n";
+				showChipandMult();
+			}
+			if(p1.j[i].edition=="Holographic"){
+				mults+=10;
+				cout<<"Holographic Edition! +10 Mult\n";
+				showChipandMult();
+			}
+			if(p1.j[i].edition=="Polychrome"){
+				mults*=1.5;
+				cout<<"Polychrome Edition! *1.5 Mult\n";
+				showChipandMult();
+			}
 		}
 		
 		return chips*mults;
-	}	
+	}
 	
 	
 	int HandMax=8;
@@ -939,11 +1146,11 @@ struct challenge{
 		
 		
 		int q[15],qn=0;	
-		cout<<"input the amount of the cards you need to Discard\n";
+		cout<<"INPUT the amount of the cards you need to Discard\n";
 		
 		cin>>qn;
 		
-		cout<<"input the rank of the cards\n";
+		cout<<"INPUT the rank of the cards\n";
 
 		for(int i=1;i<=qn;i++)
 			cin>>q[i]; 
@@ -952,13 +1159,13 @@ struct challenge{
 		
 		for(int i=2;i<=qn;i++){
 			if(q[i]==q[i-1]){
-				cout<<"Invalid input!\n";
+				cout<<"Invalid INPUT!\n";
 				return ;
 			}
 		}
 		for(int i=1;i<=qn;i++){
 			if(q[i]<1||q[i]>hand.cnt){
-				cout<<"Invalid input!\n";
+				cout<<"Invalid INPUT!\n";
 				return ;
 			}
 		}
@@ -966,7 +1173,11 @@ struct challenge{
 		
 		
 		for(int i=qn;i>=1;i--){
-			if(hand.c[q[i]].seal=="Purple") getRandomTarot();	
+			if(hand.c[q[i]].seal=="Purple"){
+				hand.c[q[i]].show();
+				cout<<"Purple Seal! get random tarot\n";
+				getRandomTarot();	
+			}
 			
 			for(int j=q[i]+1;j<=hand.cnt;j++)
 				hand.c[j-1]=hand.c[j];
@@ -977,17 +1188,17 @@ struct challenge{
 	void waitForOperation(){
 		Replenish();
 		cout<<"you have "<<discards<<" times Discards\n";
-		cout<<"input 1 for Play Hand, 2 for Discard, 3 for Spectral/Planet/Tarot\n";
+		cout<<"INPUT 1 for Play Hand, 2 for Discard, 3 for Spectral/Planet/Tarot,\n4 for Check Jokers/Consumable Cards, 5 for Check Poker Hands Levels, 6 for help\n";
 		
 		cin>>opt;
 	}
 	bool playCard(){
 		int q[15],qn=0;	
-		cout<<"input the amount of the cards you need to Play Hand\n";
+		cout<<"INPUT the amount of the cards you need to Play Hand\n";
 		
 		cin>>qn;
 		
-		cout<<"input the rank of the cards\n";
+		cout<<"INPUT the rank of the cards\n";
 
 		for(int i=1;i<=qn;i++)
 			cin>>q[i]; 
@@ -996,13 +1207,13 @@ struct challenge{
 		
 		for(int i=2;i<=qn;i++){
 			if(q[i]==q[i-1]){
-				cout<<"Invalid input!\n";
+				cout<<"Invalid INPUT!\n";
 				return false;
 			}
 		}
 		for(int i=1;i<=qn;i++){
 			if(q[i]<1||q[i]>hand.cnt){
-				cout<<"Invalid input!\n";
+				cout<<"Invalid INPUT!\n";
 				return false;
 			}
 		}
@@ -1026,13 +1237,24 @@ struct challenge{
 	bool settle(){
 		if(sum>=target){
 			
-			for(int i=1;i<=hand.cnt;i++)
-				if(hand.c[i].seal=="Blue") getPlanet(PokerHands);
-			
+			for(int i=1;i<=hand.cnt;i++){
+				if(hand.c[i].seal=="Blue"){
+					hand.c[i].show();
+					cout<<"Blue Seal! get planet\n";
+					getPlanet(PokerHands);
+				}
+				if(hand.c[i].enhance=="Gold"){
+					p1.money+=3;
+					hand.c[i].show();
+					cout<<"Gold Card! +3 coins\n";
+					showMoney();
+				}				
+			}
+						
 			cout<<"YOU WIN！\n";
 			
 			int GetMoney=BasicMoney+hands+min(5,p1.money/5);
-			cout<<"You get "<<GetMoney<<" coins\n";
+			cout<<"You get BasicMoney+hands+interest="<<GetMoney<<" coins\n";
 			p1.money+=GetMoney;
 		
 			shop.Start();
@@ -1041,7 +1263,7 @@ struct challenge{
 			
 		}else{
 			cout<<"YOU LOSE!\n";
-			cout<<"Let's see who's the real clown lol(";
+			cout<<"Let's see who's the real joker lol (";
 			return false;
 		}	
 	}
@@ -1069,12 +1291,11 @@ struct challenge{
 						if(p1.cocnt){
 							p1.showConsumable();
 									
-							cout<<"input the rank of the consumable card you want to use or 0 to go back\n";				
+							cout<<"INPUT the rank of the consumable card you want to use or 0 to go back\n";				
 							int x; cin>>x;
 							if(x==0) waitForOperation();
 							else{
 								useConsumables(p1.co[x]);
-								cout<<"Successfully used!\n";
 								waitForOperation();	
 							}
 							
@@ -1082,8 +1303,23 @@ struct challenge{
 							cout<<"You have no consumable card\n";
 							waitForOperation();	
 						}
+					}else if(opt==4){
+						cout<<"your Jokers and Consumable Cards are as follow\n";
+						for(int i=1;i<=p1.jcnt;i++)
+							p1.j[i].show();
+						for(int i=1;i<=p1.cocnt;i++)
+							p1.co[i].show();
+						waitForOperation();
+					}else if(opt==5){
+						cout<<"your Poker Hands Levels are as follow\n";
+						for(int i=4;i<=12;i++)
+							cout<<PHname[i]<<"          (level="<<PHlevel[i]<<") chip="<<PHchip[i]<<" mult="<<PHmult[i]<<'\n';
+						waitForOperation();	
+					}else if(opt==6){
+						help();
+						waitForOperation();	
 					}else{
-						cout<<"?\ninput again\n";
+						cout<<"?\nINPUT again\n";
 						waitForOperation();
 					}	
 				}
@@ -1093,14 +1329,18 @@ struct challenge{
 				
 				if(sum>=target) break;
 			}			
-			Continue=settle();	
+			Continue=settle();
+			if(T==15) break;
 		}		
+		
+		cout<<"Congratulation!\n\nI'm the real joker :(\nChange the data and try more :)";
+		
 	}
 	
 }playCard;
 
 void init(){
-	p1.money=0;
+	p1.money=1000;
 	p1.ccnt=52;
 	for(int i=1;i<=4;i++) 
 		for(int j=1;j<=13;j++)
