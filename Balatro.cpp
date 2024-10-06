@@ -34,6 +34,18 @@ void help(){
 	cout<<"Blue Seal:    If this card is held at end of round, it creates the Planet card matching the final poker hand played, if you have room\n";
 	cout<<"Purple Seal:    Creates a Tarot card when discarded, if you have room\n";
 	
+	cout<<"\n";
+	cout<<"POKER HANDS\n";
+	cout<<"Straight Flush:    Five cards in consecutive order, all from a single suit.\n";
+	cout<<"Four of a King:    Four cards with a matching rank. Suits may differ.\n";
+	cout<<"Full House:    Three cards with a matching rank, and two cards with any other matching rank, with cards from two or more suits.\n";
+	cout<<"Flush:    Five cards of any rank, all from a single suit.\n";
+	cout<<"Straight:    Five cards in consecutive order which are not all from the same suit. Aces can be counted high or low, but not both at once.\n";
+	cout<<"Three of a King:    Three cards with a matching rank. Suits may differ.\n";
+	cout<<"Two Pair:    Two cards with a matching rank, and two cards with any other matching rank. Suits may differ.\n";
+	cout<<"Pair:    Two cards with a matching rank. Suits may differ.\n";
+	cout<<"High Card:    When no other hand is possible, the one highest card in your hand. Aces are counted high for this hand.\n";
+	
 	cout<<"-----------------------------------------------------------------\n";
 	cout<<"\n";
 }
@@ -1198,6 +1210,11 @@ struct challenge{
 		
 		cin>>qn;
 		
+		if(qn>5){
+			cout<<"Invalid INPUT!\n";
+			return false;
+		}
+		
 		cout<<"INPUT the rank of the cards\n";
 
 		for(int i=1;i<=qn;i++)
@@ -1337,10 +1354,71 @@ struct challenge{
 		
 	}
 	
+	
+	
+	void tutorial(){
+		cout<<"This is tutorial and if you are experienced you can input 0 to skip.\n";
+		cout<<"Otherwise input any number except 0 to continue\n";
+		
+		int ttmp; cin>>ttmp;
+		
+		if(ttmp==0){
+			cout<<"Have a nice game!\n";
+			return ;
+		}
+		
+		cout<<"Welcome to Labatro.()\n";
+		
+		cout<<"So what you should do here is Discard,Discard,Discard,and then Play Hand.\n";
+		
+		cout<<"It's ok not knowing any Poker Hands,you can ask for help anytime.\n";
+		
+		cout<<"Let's take a look at a situation.\n";
+		
+		cout<<"Now you have\n";
+		
+		cout<<"(1) 2 Spade\n";
+		cout<<"(2) 5 Diamond\n";
+		cout<<"(3) 6 Spade\n";
+		cout<<"(4) 7 Club\n";
+		cout<<"(5) 9 Club\n";
+		cout<<"(6) J Spade\n";
+		cout<<"(7) Q Heart\n";
+		cout<<"(8) Q Spade\n";
+		
+		cout<<"You can Play Hand with no more than 5 Playing Cards, like (7) Q Heart and (8) Q Spade for a \"Pair\".\n";
+		cout<<"Or you can choose to discards any amount of cards you like, hoping for a better Poker Hand.\n";
+		cout<<"And you Discards (2) 5 Diamond, (4) 7 Club and (5) 9 Club,now you have\n";
+		
+		cout<<"(1) 2 Club\n";
+		cout<<"(2) 2 Spade\n";
+		cout<<"(3) 5 Heart\n";
+		cout<<"(4) 6 Spade\n";
+		cout<<"(5) J Spade\n";
+		cout<<"(6) Q Heart\n";
+		cout<<"(7) Q Spade\n";
+		cout<<"(8) A Spade\n";		
+		
+		cout<<"Now you can Play (2),(4),(5),(7),(8) cause these cards are from the same suit,so you played a \"Flush\".";
+		cout<<"Then you get (Chip = 35 + 2 + 6 + 10 + 10 + 11 = 74) * (Mult = 4) = 296 Points\n";
+		
+		cout<<"The Poker Hands give the basis(35 and 4), and every card that make up this Poker Hands give additions, while Joker Cards and Consumable Cards give more.\n";
+		cout<<"Initially, You have 4 chances for Playing Cards and 4 chances for Discards.\n";
+		cout<<"Your goal is to maximize the Points and buy the Cards and Packs in the Shop to improve your run.\n";
+		
+		cout<<"That's almost the basic rule. Go and explore this game and find the pleasure.\n";
+		cout<<"Have a nice game!\n";
+		
+		cout<<"Read them all and input any number to continue\n";
+		cin>>ttmp;
+	}
+	
+	
+	
 }playCard;
 
 void init(){
-	p1.money=1000;
+	p1.money=0;
 	p1.ccnt=52;
 	for(int i=1;i<=4;i++) 
 		for(int j=1;j<=13;j++)
@@ -1356,7 +1434,7 @@ void init(){
 signed main(){
 	srand(time(0)); 
 	init();
-	playCard.Start();	
-	
+	playCard.tutorial();
+	playCard.Start();
 	return 0;
 }
