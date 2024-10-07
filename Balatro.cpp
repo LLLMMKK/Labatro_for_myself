@@ -1348,9 +1348,9 @@ struct challenge{
 			}			
 			Continue=settle();
 			if(T==15) break;
-		}		
+		}
 		
-		cout<<"Congratulation!\n\nI'm the real joker :(\nChange the data and try more :)";
+		if(T==15) cout<<"Congratulation!\n\nI'm the real joker :(\nChange the data and try more :)";
 		
 	}
 	
@@ -1437,5 +1437,9 @@ signed main(){
 	init();
 	playCard.tutorial();
 	playCard.Start();
+	
+	int ttmp;
+	cout<<"input any number to continue\n";
+	cin>>ttmp;
 	return 0;
 }
