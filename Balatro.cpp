@@ -1439,7 +1439,7 @@ signed main(){
 	playCard.Start();
 	
 	int ttmp;
-	cout<<"input any number to continue\n";
+	cout<<"\n\ninput any number to continue\n";
 	cin>>ttmp;
 	return 0;
 }
